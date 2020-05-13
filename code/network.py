@@ -20,6 +20,7 @@ class GazeEstimationNet(nn.module):
 		)
 
 		self.skip_conv2 = nn.Conv2d(384, 256, kernel_size=1)
+		self.skip_conv3 = nn.Conv2d(512, 256, kernel_size=3, stride=2)
 
 		self.features2 = nn.Sequential(
 			nn.Conv2d(384, 384, kernel_size=3),
@@ -31,7 +32,7 @@ class GazeEstimationNet(nn.module):
 		)
 
 		self.regression = nn.Sequential(
-			#nn.Linear( , 4096), TODO: calculate input features
+			#nn.Linear(512 *  , 4096), TODO: calculate input features
 			nn.ReLU(True),
 			nn.Linear(4096, 512),
 			nn.ReLU(True),
@@ -48,6 +49,7 @@ class GazeEstimationNet(nn.module):
 		x2 = F.relu(self.skip_conv2(x))
 
 		x3 = torch.cat((x1,x2),1)
+		x3 = self.skip_conv3(x3)
 
 		x = self.features2(x)
 		x = torch.cat((x,x3),1)
