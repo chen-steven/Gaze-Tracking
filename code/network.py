@@ -2,19 +2,19 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 
-class GazeEstimationNet(nn.module):
+class GazeEstimationNet(nn.Module):
 	def __init__(self):
 		super(GazeEstimationNet, self).__init__()
-		self.conv1 = nn.Conv2D(3,96, kernel_size=11, stride=4)
+		self.conv1 = nn.Conv2d(3,96, kernel_size=11, stride=4)
 		self.skip_conv1 = nn.Conv2d(96, 256, kernel_size=7, stride=4)
 		self.features1 = nn.Sequential(
-			nn.BatchNorm2d(96)
+			nn.BatchNorm2d(96),
 			nn.MaxPool2d(kernel_size=3, stride=2),
-			nn.ReLU(True)
+			nn.ReLU(True),
 			nn.Conv2d(96, 256, kernel_size=5, stride=2),
-			nn.BatchNorm2d(256)
+			nn.BatchNorm2d(256),
 			nn.MaxPool2d(kernel_size=3, stride=2),
-			nn.ReLU(True)
+			nn.ReLU(True),
 			nn.Conv2d(256, 384, kernel_size=3),
 			nn.ReLU(True)
 		)
@@ -24,7 +24,7 @@ class GazeEstimationNet(nn.module):
 
 		self.features2 = nn.Sequential(
 			nn.Conv2d(384, 384, kernel_size=3),
-			nn.ReLU(True)
+			nn.ReLU(True),
 			nn.Conv2d(384, 256, kernel_size=3),
 			nn.MaxPool2d(kernel_size=3, stride=2),
 			nn.ReLU(True),
@@ -56,5 +56,10 @@ class GazeEstimationNet(nn.module):
 
 		x = torch.flatten(x,1)
 
-		x = self.regression(x)
+		#x = self.regression(x)
 		return x
+
+if __name__ == '__main__':
+	#from torchsummary import summary
+	model = GazeEstimationNet()
+	print(model)
