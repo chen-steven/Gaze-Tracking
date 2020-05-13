@@ -41,6 +41,8 @@ class GazeEstimationNet(nn.module):
 
 	def forward(self,x):
 		x = self.conv1(x)
+
+		#x1 = self.conv
 		x = self.features1(x)
 		x = self.features2(x)
 		x = self.regression(x)
